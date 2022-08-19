@@ -36,26 +36,26 @@ You will have an output like the following:
 
 ```
 CloudSQL CPU Utilization (%)
-name: my-project:db-dev value: 2.701801066450571
-name: my-project:db01 value: 2.419767372093702
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db-dev value: 2.701801066450571
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db01 value: 2.419767372093702
 
 CloudSQL memory total usage
-name my-project:db-dev value: 0 GB
-name my-project:db01 value: 0 GB
+starttime: 2022-08-19T14:09:00Z endttime: name my-project:db-dev value: 0 GB
+starttime: 2022-08-19T14:09:00Z endttime:v name my-project:db01 value: 0 GB
 
 CloudSQL memory total size
-name my-project:db-dev value: 8 GB
-name my-project:db01 value: 8 GB
+starttime: 2022-08-19T14:09:00Z endttime: name my-project:db-dev value: 8 GB
+starttime: 2022-08-19T14:09:00Z endttime: name my-project:db01 value: 8 GB
 
 CloudSQL Active Connections
-Name: my-project:db01 Value: 4
-name: my-project:db-dev value: 2
-name: my-project:db-dev value: 0
-name: my-project:db-dev value: 0
+starttime: 2022-08-19T14:09:00Z endttime: Name: my-project:db01 Value: 4
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db-dev value: 2
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db-dev value: 0
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db-dev value: 0
 
 CloudSQL Disk Utilization
-name: my-project:db-dev value: 0 GB
-name: my-project:db01 value: 1 GB
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db-dev value: 0 GB
+starttime: 2022-08-19T14:09:00Z endttime: name: my-project:db01 value: 1 GB
 ```
 
 Where `my-project` is the Google project name, `db01` and `db-dev` are the Cloud SQL instances running.

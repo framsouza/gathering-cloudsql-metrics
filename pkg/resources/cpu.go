@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
 	"google.golang.org/api/iterator"
@@ -19,8 +20,7 @@ func CpuUtlizaiton(projectId string) {
 	defer c.Close()
 
 	req := &monitoringpb.QueryTimeSeriesRequest{
-		Name: fmt.Sprintf("projects/%s", projectId), // optional
-		//Query: (`fetch gce_instance :: compute.googleapis.com/instance/cpu/utilization | within 5m`),
+		Name:  fmt.Sprintf("projects/%s", projectId), // optional
 		Query: (`fetch cloudsql_database :: cloudsql.googleapis.com/database/cpu/utilization | within 60m`),
 	}
 
@@ -37,7 +37,13 @@ func CpuUtlizaiton(projectId string) {
 
 		value := resp.GetPointData()[0].GetValues()[0].GetDoubleValue() * 100
 
-		fmt.Println("name:", resp.GetLabelValues()[2].GetStringValue(), "value:", value)
+		getinterval := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
 
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", value)
+
+		//publisher.Publish("elastic-support", "test-cloudmetrics", msg)
 	}
+
 }

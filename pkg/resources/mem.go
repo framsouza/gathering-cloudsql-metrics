@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
 	"google.golang.org/api/iterator"
@@ -37,7 +38,11 @@ func MemUtlizaiton(projectId string) {
 
 		value := resp.GetPointData()[0].GetValues()[0].GetInt64Value() * 8 / 8000000000
 
-		fmt.Println("name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
+		getinterval := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
 
 	}
 }
@@ -68,8 +73,11 @@ func MemUTotal(projectId string) {
 		}
 
 		value := resp.GetPointData()[0].GetValues()[0].GetInt64Value() * 8 / 8000000000
+		getinterval := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
 
-		fmt.Println("name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
 
 	}
 }

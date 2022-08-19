@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
 	"google.golang.org/api/iterator"
@@ -34,7 +35,11 @@ func MySQLConnections(projectId string) {
 			log.Fatal(err)
 		}
 
-		fmt.Println("Name:", resp.GetLabelValues()[2].GetStringValue(), "Value:", resp.GetPointData()[0].GetValues()[0].GetInt64Value())
+		getinterval := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", resp.GetPointData()[0].GetValues()[0].GetInt64Value())
 
 	}
 }
@@ -63,7 +68,11 @@ func PGSQLConnections(projectId string) {
 			log.Fatal(err)
 		}
 
-		fmt.Println("name:", resp.GetLabelValues()[2].GetStringValue(), "value:", resp.GetPointData()[0].GetValues()[0].GetInt64Value())
+		getinterval := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", resp.GetPointData()[0].GetValues()[0].GetInt64Value())
 
 	}
 }
