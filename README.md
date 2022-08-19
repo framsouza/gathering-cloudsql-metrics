@@ -8,7 +8,7 @@ This code will connect to the Cloud Monitoring API and collect the metrics from 
 - Active Connections 
 - Total memory
 
-For more metrics, check https://cloud.google.com/monitoring/api/metrics_gcp#gcp-cloudsql
+For more metrics, check [Google Cloud SQL metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-cloudsql)
 
 ### Usage
 
