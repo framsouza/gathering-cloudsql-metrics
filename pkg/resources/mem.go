@@ -12,7 +12,6 @@ import (
 )
 
 func MemUtlizaiton(projectId string) {
-	//projectID = projectId
 	ctx := context.Background()
 	c, err := monitoring.NewQueryClient(ctx)
 	if err != nil {
@@ -38,9 +37,10 @@ func MemUtlizaiton(projectId string) {
 
 		value := resp.GetPointData()[0].GetValues()[0].GetInt64Value() * 8 / 8000000000
 
-		getinterval := resp.GetPointData()[1].GetTimeInterval()
-		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
-		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+		getstart := resp.GetPointData()[2].GetTimeInterval()
+		getend := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getstart.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getend.EndTime.AsTime().Format(time.RFC3339)
 
 		fmt.Println("starttime:", starttime, "endttime:", endtime, "name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
 
@@ -48,7 +48,6 @@ func MemUtlizaiton(projectId string) {
 }
 
 func MemUTotal(projectId string) {
-	//projectId := "elastic-apps-163815"
 	ctx := context.Background()
 	c, err := monitoring.NewQueryClient(ctx)
 	if err != nil {
@@ -73,9 +72,11 @@ func MemUTotal(projectId string) {
 		}
 
 		value := resp.GetPointData()[0].GetValues()[0].GetInt64Value() * 8 / 8000000000
-		getinterval := resp.GetPointData()[1].GetTimeInterval()
-		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
-		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+
+		getstart := resp.GetPointData()[2].GetTimeInterval()
+		getend := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getstart.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getend.EndTime.AsTime().Format(time.RFC3339)
 
 		fmt.Println("starttime:", starttime, "endttime:", endtime, "name", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
 

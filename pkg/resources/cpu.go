@@ -21,7 +21,7 @@ func CpuUtlizaiton(projectId string) {
 
 	req := &monitoringpb.QueryTimeSeriesRequest{
 		Name:  fmt.Sprintf("projects/%s", projectId), // optional
-		Query: (`fetch cloudsql_database :: cloudsql.googleapis.com/database/cpu/utilization | within 60m`),
+		Query: (`fetch cloudsql_database :: cloudsql.googleapis.com/database/cpu/utilization | within 5m`),
 	}
 
 	it := c.QueryTimeSeries(ctx, req)
@@ -37,9 +37,10 @@ func CpuUtlizaiton(projectId string) {
 
 		value := resp.GetPointData()[0].GetValues()[0].GetDoubleValue() * 100
 
-		getinterval := resp.GetPointData()[1].GetTimeInterval()
-		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
-		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+		getstart := resp.GetPointData()[2].GetTimeInterval()
+		getend := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getstart.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getend.EndTime.AsTime().Format(time.RFC3339)
 
 		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", value)
 

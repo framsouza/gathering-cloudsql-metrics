@@ -35,9 +35,10 @@ func DiskUtil(projectId string) {
 			log.Fatal(err)
 		}
 
-		getinterval := resp.GetPointData()[1].GetTimeInterval()
-		starttime := getinterval.StartTime.AsTime().Format(time.RFC3339)
-		endtime := getinterval.EndTime.AsTime().Format(time.RFC3339)
+		getstart := resp.GetPointData()[2].GetTimeInterval()
+		getend := resp.GetPointData()[1].GetTimeInterval()
+		starttime := getstart.StartTime.AsTime().Format(time.RFC3339)
+		endtime := getend.EndTime.AsTime().Format(time.RFC3339)
 
 		value := resp.GetPointData()[0].GetValues()[0].GetInt64Value() * 8 / 8000000000
 		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", value, "GB")
