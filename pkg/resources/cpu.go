@@ -7,11 +7,13 @@ import (
 	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
+	"cloud.google.com/go/pubsub"
+	"github.com/framsouza/gathering-metrics-gcp/pkg/publisher"
 	"google.golang.org/api/iterator"
 	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
 )
 
-func CpuUtlizaiton(projectId string) {
+func CpuUtlizaiton(projectId, topic string) {
 	ctx := context.Background()
 	c, err := monitoring.NewQueryClient(ctx)
 	if err != nil {
@@ -36,15 +38,24 @@ func CpuUtlizaiton(projectId string) {
 		}
 
 		value := resp.GetPointData()[0].GetValues()[0].GetDoubleValue() * 100
-
+		name := resp.GetLabelValues()[2].GetStringValue()
 		getstart := resp.GetPointData()[2].GetTimeInterval()
 		getend := resp.GetPointData()[1].GetTimeInterval()
 		starttime := getstart.StartTime.AsTime().Format(time.RFC3339)
 		endtime := getend.EndTime.AsTime().Format(time.RFC3339)
 
-		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", resp.GetLabelValues()[2].GetStringValue(), "value:", value)
+		fmt.Println("starttime:", starttime, "endttime:", endtime, "name:", name, "value:", value)
 
-		//publisher.Publish("elastic-support", "test-cloudmetrics", msg)
+		msg := fmt.Sprintf("%s %s %s %f", starttime, endtime, name, value)
+
+		client, err := pubsub.NewClient(ctx, projectId)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		if err := publisher.Publish(client, topic, msg); err != nil {
+			log.Fatal("Failed to publish: %^v", err)
+		}
 	}
 
 }

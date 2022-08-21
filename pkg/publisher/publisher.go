@@ -3,20 +3,41 @@ package publisher
 import (
 	"context"
 	"fmt"
-	"io"
 
 	"cloud.google.com/go/pubsub"
+	"google.golang.org/api/iterator"
 )
 
-func Publish(w io.Writer, projectId, topicID, msg string) error {
+func List(client *pubsub.Client) ([]*pubsub.Topic, error) {
 	ctx := context.Background()
-	client, err := pubsub.NewClient(ctx, projectId)
-	if err != nil {
-		return fmt.Errorf("pubsub: NewClient: %v", err)
+	var topics []*pubsub.Topic
+	it := client.Topics(ctx)
+	for {
+		topic, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		topics = append(topics, topic)
 	}
-	defer client.Close()
+	return topics, nil
+}
+func Create(client *pubsub.Client, topic string) error {
+	ctx := context.Background()
+	t, err := client.CreateTopic(ctx, topic)
+	if err != nil {
+		return err
+	}
 
-	t := client.Topic(topicID)
+	fmt.Printf("Topic created: %v\n", t)
+	return nil
+}
+
+func Publish(client *pubsub.Client, topic, msg string) error {
+	ctx := context.Background()
+	t := client.Topic(topic)
 	result := t.Publish(ctx, &pubsub.Message{
 		Data: []byte(msg),
 	})
@@ -24,8 +45,8 @@ func Publish(w io.Writer, projectId, topicID, msg string) error {
 	// ID is returned for the published message.
 	id, err := result.Get(ctx)
 	if err != nil {
-		return fmt.Errorf("pubsub: result.Get: %v", err)
+		return err
 	}
-	fmt.Fprintf(w, "Published a message; msg ID: %v\n", id)
+	fmt.Printf("Published a message; msg ID: %v\n", id)
 	return nil
 }
