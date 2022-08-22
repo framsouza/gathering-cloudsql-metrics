@@ -26,7 +26,7 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-	fmt.Println("Connecting with topic %s\n", topic)
+	fmt.Println("Connecting with topic:", *topic)
 	fmt.Print("\nCloudSQL CPU Utilization (%)\n")
 	resources.CpuUtlizaiton(*projectId, *topic)
 	fmt.Print("\nCloudSQL memory total usage\n")
