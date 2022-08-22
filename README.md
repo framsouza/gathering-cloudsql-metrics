@@ -1,6 +1,6 @@
 # Gathering Google Cloud SQL metrics
 
-This code will connect to the Cloud Monitoring API, gather the metrics from Google Cloud SQL and send it to a Cloud Pub/Sub, right now, the metrics that are being collected are:
+This code will connect to the Cloud Monitoring API, gather the metrics from Google Cloud SQL and send it to a Cloud Pub/Sub. This function executes each 60 seconds, right now, the metrics that are being collected are:
 
 - disk utilization
 - memory utilization

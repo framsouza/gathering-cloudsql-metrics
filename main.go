@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	resources "github.com/framsouza/gathering-metrics-gcp/pkg/resources"
 )
@@ -26,17 +27,21 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-	fmt.Println("Connecting with topic:", *topic)
-	fmt.Print("\nCloudSQL CPU Utilization (%)\n")
-	resources.CpuUtlizaiton(*projectId, *topic)
-	fmt.Print("\nCloudSQL memory total usage\n")
-	resources.MemUtlizaiton(*projectId, *topic)
-	fmt.Print("\nCloudSQL memory total size\n")
-	resources.MemUTotal(*projectId, *topic)
-	fmt.Print("\nCloudSQL Active Connections\n")
-	resources.MySQLConnections(*projectId, *topic)
-	resources.PGSQLConnections(*projectId, *topic)
-	fmt.Print("\nCloudSQL Disk Utilization\n")
-	resources.DiskUtil(*projectId, *topic)
+
+	ticker := time.NewTicker(60 * time.Second)
+	for _ = range ticker.C {
+		fmt.Println("Connecting with topic:", *topic)
+		fmt.Print("\nCloudSQL CPU Utilization (%)\n")
+		resources.CpuUtlizaiton(*projectId, *topic)
+		fmt.Print("\nCloudSQL memory total usage\n")
+		resources.MemUtlizaiton(*projectId, *topic)
+		fmt.Print("\nCloudSQL memory total size\n")
+		resources.MemUTotal(*projectId, *topic)
+		fmt.Print("\nCloudSQL Active Connections\n")
+		resources.MySQLConnections(*projectId, *topic)
+		resources.PGSQLConnections(*projectId, *topic)
+		fmt.Print("\nCloudSQL Disk Utilization\n")
+		resources.DiskUtil(*projectId, *topic)
+	}
 
 }
